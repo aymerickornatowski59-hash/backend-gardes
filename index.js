@@ -6,8 +6,21 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_URL);
+const PORT = process.env.PORT || 3000;
 
+// ✅ connexion propre Mongo
+mongoose.connect(process.env.MONGO_URL)
+.then(() => {
+  console.log("MongoDB connecté");
+
+  app.listen(PORT, () => {
+    console.log("API READY on " + PORT);
+  });
+
+})
+.catch(err => {
+  console.log("Erreur MongoDB :", err);
+});
 // ===== MODELS =====
 
 const User = mongoose.model("User", {
