@@ -1,15 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 
-const cors = require("cors");
+app.use(cors());
+app.options("*", cors()); // 👈 FIX
 
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "DELETE"],
-  allowedHeaders: ["Content-Type"]
-}));
 app.use(express.json());
 
 // 🔗 Connexion MongoDB
