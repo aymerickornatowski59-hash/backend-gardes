@@ -3,29 +3,31 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// 🔗 Connexion Mongo
-mongoose.connect(process.env.MONGO_URL)
+// 🔗 Connexion MongoDB
+mongoose
+  .connect(process.env.MONGO_URL)
   .then(() => console.log("Mongo connecté"))
-  .catch(err => console.log("Erreur Mongo :", err));
+  .catch((err) => console.log("Erreur Mongo :", err));
 
 // 📦 Model
 const Garde = mongoose.model("Garde", {
   nom: String,
 });
 
-// 📥 GET (liste)
+// 📥 GET → récupérer les gardes
 app.get("/en-garde", async (req, res) => {
   const gardes = await Garde.find();
   res.json(gardes);
 });
 
-// ➕ POST (ajout)
+// 🟢 POST → ajouter une garde
 app.post("/webhook", async (req, res) => {
   try {
-    console.log("BODY:", req.body); // debug
+    console.log("BODY:", req.body);
 
     if (!req.body || !req.body.nom) {
       return res.status(400).json({ error: "Nom requis" });
@@ -44,7 +46,17 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-// 🚀 Start serveur
+// 🔴 DELETE → supprimer une garde
+app.delete("/depart/:id", async (req, res) => {
+  try {
+    await Garde.findByIdAndDelete(req.params.id);
+    res.json({ message: "Supprimé" });
+  } catch (err) {
+    res.status(500).json({ error: "Erreur suppression" });
+  }
+});
+
+// 🚀 Lancement serveur
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
