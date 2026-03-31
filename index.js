@@ -2,6 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+app.post("/arrivee", async (req, res) => {
+  const { nom } = req.body;
+
+  const garde = new Garde({
+    nom: nom || "Sans nom",
+  });
+
+  await garde.save();
+  res.json(garde);
+});
 const app = express();
 app.use(express.json());
 app.use(cors());
