@@ -5,7 +5,11 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+app.post("/arrivee", async (req, res) => {
+  const garde = new Garde({ nom: "Nouvelle garde" });
+  await garde.save();
+  res.json(garde);
+});
 const PORT = process.env.PORT || 3000;
 
 // ✅ connexion propre Mongo
