@@ -9,6 +9,11 @@ app.post("/arrivee", async (req, res) => {
     nom: nom || "Sans nom",
   });
 
+  app.delete("/depart/:id", async (req, res) => {
+  await Garde.findByIdAndDelete(req.params.id);
+  res.json({ message: "Supprimé" });
+});
+
   await garde.save();
   res.json(garde);
 });
