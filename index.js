@@ -25,18 +25,21 @@ app.get("/en-garde", async (req, res) => {
 // ➕ POST (ajout)
 app.post("/webhook", async (req, res) => {
   try {
-    const { nom } = req.body;
+    console.log("BODY:", req.body); // debug
 
-    if (!nom) {
+    if (!req.body || !req.body.nom) {
       return res.status(400).json({ error: "Nom requis" });
     }
 
-    const garde = new Garde({ nom });
+    const garde = new Garde({
+      nom: req.body.nom,
+    });
+
     await garde.save();
 
     res.json({ message: "Ajouté", garde });
   } catch (err) {
-    console.error(err);
+    console.error("ERREUR WEBHOOK:", err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
